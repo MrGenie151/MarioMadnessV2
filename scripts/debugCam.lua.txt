@@ -1,0 +1,215 @@
+-- ##### Debug Camera v1 by "Held_der_Zeit" #####
+
+
+
+--- ### KEYBINDS ###
+
+zoomIn = "E"
+zoomOut = "Q"
+keyL = "left"
+keyR = "right"
+keyU = "up"
+keyD = "down"
+
+flxDouble = "SHIFT"
+flxHalf = "CONTROL"
+
+
+
+
+--- ##### NO MORE CHANGING AS NORMAL USER!!! #####
+
+debug = false
+mult=1
+
+function onCreate()
+    --if getProperty('chartingMode') or botplay then
+        --debug = true
+    --end
+
+    makeAnimatedLuaSprite('fakebf', 'characters/BOYFRIEND', defaultBoyfriendX, defaultBoyfriendY)
+    --setProperty('fakebf.alpha', getProperty('boyfriend.alpha'))
+    setObjectOrder('fakebf', getProperty('boyfriendGroup'))
+
+    makeLuaText('cursubstate', 'DEBUG CAM', 0, 0, 0)
+    setObjectCamera('cursubstate', 'hud')
+
+    makeLuaText('defcamx', 'DEFAULT X: '..cameraX, 0, 1000, 100)
+    setObjectCamera('defcamx', 'hud')
+
+    makeLuaText('defcamy', 'DEFAULT Y: '..cameraY, 0, 1000, 120)
+    setObjectCamera('defcamy', 'hud')
+
+    makeLuaText('defzoom', 'DEFAULT ZOOM: '..getProperty("defaultCamZoom"), 0, 1000, 150)
+    setObjectCamera('defzoom', 'hud')
+
+    makeLuaText('camx', 'Current X: '..cameraX, 0, 0, 100)
+    setObjectCamera('camx', 'hud')
+
+    makeLuaText('camy', 'Current Y: '..cameraY, 0, 0, 120)
+    setObjectCamera('camy', 'hud')
+
+    makeLuaText('zoom', 'Current Zoom: '..getProperty("defaultCamZoom"), 0, 0, 150)
+    setObjectCamera('zoom', 'hud')
+
+    makeLuaText('multi', 'Current Multiplier: '..mult, 0, 0, 200)
+    setObjectCamera('multi', 'hud')
+end
+
+function onCreatePost()
+    --if getProperty('chartingMode') or botPlay then
+    if botPlay then
+        debug = true
+    end
+
+    if debug then
+        setTextString('defcamy', 'DEFAULT Y: '..toInt(cameraY))
+        setTextString('defcamx', 'DEFAULT X: '..toInt(cameraX))
+        setTextString('defzoom', 'DEFAULT ZOOM: '..getProperty("defaultCamZoom"))
+
+        --setTextString('defzoom', 'DEFAULT ZOOM: '..getPropertyFromClass("stageData","defaultZoom"))
+
+        scoreZoom = false
+        cameraZoomOnBeat = false
+
+        for i = 0,3 do
+            setPropertyFromGroup('opponentStrums', i, 'visible', false)
+            setPropertyFromGroup('playerStrums', i, 'visible', false)
+        end
+
+        setProperty('healthBar.alpha', 0)
+        setProperty('healthBarBG.alpha', 0)
+        setProperty('iconP1.alpha', 0)
+        setProperty('iconP2.alpha', 0)
+        setProperty('scoreTxt.alpha', 0)
+        setProperty('showComboNum', false)
+        setProperty('showRating', false)
+
+        setTextString('scoreTxt', "'Debug Cam' by 'Held_der_Zeit'")
+        setTextString('botplayTxt', "'Debug Cam' by 'Held_der_Zeit'")
+
+    end
+end
+
+function onSongStart()
+    if debug then
+        if not botPlay then
+            setProperty('botPlay', true)
+        end
+
+        openCustomSubstate("DebugCam", false)
+    end
+end
+
+function onCustomSubstateCreate(name)
+    if name == "DebugCam" then
+        --WIP
+        --debugPrint('Use WASD to move')
+        --setProperty("isCameraOnForcedPos", true)
+        --setProperty("camFollowPos.x", cameraX)
+
+        scoreZoom = false
+        cameraZoomOnBeat = false
+
+        addLuaSprite('fakebf')
+
+        addLuaText('cursubstate')
+        addLuaText('defcamy')
+        addLuaText('defcamx')
+        addLuaText('camy')
+        addLuaText('camx')
+        addLuaText('zoom')
+        addLuaText('defzoom')
+        addLuaText('multi')
+        --addLuaText('zoom')
+
+    end
+end
+
+function onUpdate(elapsed)
+    if debug then
+        --OLD/ALT SWITCH VERSION
+        --[[
+        if getPropertyFromClass('flixel.FlxG', 'keys.justPressed.SHIFT') then
+            mult = mult + 1
+
+            if mult > 2 then
+                mult = 1
+            end
+        end
+        --]]
+
+        scoreZoom = false
+        cameraZoomOnBeat = false
+
+        if getPropertyFromClass('flixel.FlxG', 'keys.pressed.'..flxDouble) then
+            mult=2
+        --end
+        elseif getPropertyFromClass('flixel.FlxG', 'keys.pressed.'..flxHalf) then
+            mult = 0.5
+        --[
+        else
+        --if getPropertyFromClass('flixel.FlxG', 'keys.released.SHIFT') then
+            mult = 1
+        end
+        --]]
+
+
+        --ZOOMING
+        if keyboardJustPressed(zoomOut) then
+            setProperty("defaultCamZoom", getProperty("defaultCamZoom")-mult*0.05)
+        elseif keyboardJustPressed(zoomIn) then
+            setProperty("defaultCamZoom", getProperty("defaultCamZoom")+mult*0.05)
+        end
+
+
+        --PUT IN MOVEMENT STUFF HERE
+        if keyJustPressed(keyL) then
+            --cameraX = cameraX-50
+            doTweenX("camMoveX", "boyfriend", getProperty("boyfriend.x") - mult*50, 0.1, "circinout")
+        elseif keyJustPressed(keyR) then
+            --cameraX = cameraX+50
+            doTweenX("camMoveX", "boyfriend", getProperty("boyfriend.x") + mult*50, 0.1, "circinout")
+        end
+
+        if keyJustPressed(keyU) then
+            --cameraY = cameraY-50
+            doTweenY("camMoveY", "boyfriend", getProperty("boyfriend.y") - mult*50, 0.1, "circinout")
+        elseif keyJustPressed(keyD) then
+            --cameraY = cameraY+50
+            doTweenY("camMoveY", "boyfriend", getProperty("boyfriend.y") + mult*50, 0.1, "circinout")
+        end
+
+
+        setTextString('zoom', 'Current Zoom: '..getProperty("defaultCamZoom"))
+        setTextString('camx', 'Current X: '..toInt(cameraX))
+        setTextString('camy', 'Current Y: '..toInt(cameraY))
+        setTextString('multi', 'Current Multiplier: '..mult)
+
+        if not mustHitSection then
+            mustHitSection = true
+        end
+
+        if mustHitSection then
+            cameraSetTarget('boyfriend')
+        end
+        setProperty('boyfriend.alpha', 0.1)
+
+    end
+end
+
+function onUpdatePost(elapsed)
+    if debug then
+        for b = 0, getProperty('notes.length') - 1 do
+            setPropertyFromGroup('notes', b, 'alpha', 0)
+            setPropertyFromGroup('grpNoteSplashes', b, 'alpha', 0)
+        end
+    end
+end
+
+
+--basically rounding, but removing the commas
+function toInt(num)
+    local multi = 10^0
+    return math.floor(num * multi + 0.5) / multi
+end

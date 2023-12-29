@@ -1,0 +1,17 @@
+texture = "poisonMario_NOTE_assets"
+hitHealth = 0.023
+missHealth = 0.0475
+earlyHitMult = 1
+lateHitMult = 1
+lowPriority = true
+blockHit = true
+offsetX = 0
+offsetY = 0
+offsetAngle = 0
+multAlpha = 1
+multSpeed = 1
+ratingDisabled = false
+noAnimation = true
+noMissAnimation = false
+hitCausesMiss = true
+ignoreNote = true

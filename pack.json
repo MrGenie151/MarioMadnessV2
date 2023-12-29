@@ -1,0 +1,8 @@
+{
+	"name": "Mario's Madness v2 (attempt 2)",
+	"description": "whohoo",
+	"restart":true,
+	"runsGlobally": false,
+	"color": [170, 0, 255],
+	"discordRPC": "863222024192262205"
+}

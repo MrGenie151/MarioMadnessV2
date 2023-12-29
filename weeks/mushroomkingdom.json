@@ -1,0 +1,41 @@
+{
+	"songs": [
+		[
+			"Its A Me",
+			"marioex",
+			[
+				146,
+				113,
+				253
+			]
+		],
+		[
+			"Starman Slaughter",
+			"marioex",
+			[
+				146,
+				113,
+				253
+			]
+		]
+	],
+	"hiddenUntilUnlocked": false,
+	"hideFreeplay": false,
+	"weekBackground": "stage",
+	"difficulties": "Normal",
+	"weekCharacters": [
+		"dad",
+		"bf",
+		"gf"
+	],
+	"storyName": "Scary Horror Mario",
+	"weekName": "Mushroom Kingdom",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"hideStoryMode": false,
+	"weekBefore": "tutorial",
+	"startUnlocked": true
+}

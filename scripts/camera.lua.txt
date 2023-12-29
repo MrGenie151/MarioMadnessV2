@@ -1,0 +1,62 @@
+-- Settings
+camSpeed = 1.815;
+tweenEase = 'expoInOut';
+
+function onCreatePost()
+	--luaDebugMode = true
+	addHaxeLibrary("FlxObject", "flixel")
+	addHaxeLibrary("FlxMath", "flixel.math")
+	runHaxeCode("dummy = new FlxObject(); game.add(dummy); game.variables.set('dummy', dummy);")
+	runHaxeCode("dummy.x = game.camFollowPos.x; dummy.y = game.camFollowPos.y;") -- Do NOT remove this line or I'll find where you live
+end
+
+function onGameOverStart()
+	isDead = true
+end
+
+function onUpdate(elapsed)
+	-- TY raltyro for doing this
+	if isDead then
+		cancelTween('cameraMoveX')
+		cancelTween('cameraMoveY')
+		return
+	end
+
+	runHaxeCode([[
+		// This code is from https://discord.com/channels/922849922175340586/1126507281849262252/1126507281849262252
+		FlxG.camera.follow(dummy);
+		FlxG.camera.target = dummy;
+		camx = game.camFollowPos.x;
+		camy = game.camFollowPos.y;
+		camlerpx = FlxMath.lerp(dummy.x, camx, 0.15 * game.playbackRate);
+		camlerpy = FlxMath.lerp(dummy.y, camy, 0.15 * game.playbackRate);
+		dummy.x = camlerpx + (game.camHUD.scroll.x / 2);
+		dummy.y = camlerpy + (game.camHUD.scroll.y / 2);
+		if (!game.isDead) FlxG.camera.snapToTarget();
+	]])
+end
+
+
+alreadyStarted = {false, false, false} -- alreadyFollowed
+alreadyRan = {false, false, false} -- alreadyTweened
+function onMoveCamera(target)
+	--setProperty('isCameraOnForcedPos', true)
+	alreadyStarted = {target == 'boyfriend', target == 'dad', target == 'gf'}
+	if alreadyStarted[1] and not alreadyRan[1] then
+		doTweenX('cameraMoveX', 'camFollowPos', (getMidpointX('boyfriend') - 100) - (getProperty('boyfriend.cameraPosition[0]') - getProperty('boyfriendCameraOffset[0]')), (camSpeed / getProperty('cameraSpeed')) / playbackRate, tweenEase)
+		doTweenY('cameraMoveY', 'camFollowPos', (getMidpointY('boyfriend') - 100) + (getProperty('boyfriend.cameraPosition[1]') + getProperty('boyfriendCameraOffset[1]')), (camSpeed / getProperty('cameraSpeed')) / playbackRate, tweenEase)
+	elseif alreadyStarted[2] and not alreadyRan[2] then
+		doTweenX('cameraMoveX', 'camFollowPos', (getMidpointX('dad') + 150) + (getProperty('dad.cameraPosition[0]') + getProperty('opponentCameraOffset[0]')), (camSpeed / getProperty('cameraSpeed')) / playbackRate, tweenEase)
+		doTweenY('cameraMoveY', 'camFollowPos', (getMidpointY('dad') - 100) + (getProperty('dad.cameraPosition[1]') + getProperty('opponentCameraOffset[1]')), (camSpeed / getProperty('cameraSpeed')) / playbackRate, tweenEase)
+	elseif alreadyStarted[3] and not alreadyRan[3] then
+		doTweenX('cameraMoveX', 'camFollowPos', getMidpointX('gf') + (getProperty('gf.cameraPosition[0]') + getProperty('girlfriendCameraOffset[0]')), (camSpeed / getProperty('cameraSpeed')) / playbackRate, tweenEase)
+		doTweenY('cameraMoveY', 'camFollowPos', getMidpointY('gf') + (getProperty('gf.cameraPosition[1]') + getProperty('girlfriendCameraOffset[1]')), (camSpeed / getProperty('cameraSpeed')) / playbackRate, tweenEase)
+	end
+	alreadyRan = {target == 'boyfriend', target == 'dad', target == 'gf'}
+	--setProperty('isCameraOnForcedPos', false)
+end
+
+--function onUpdatePost(elapsed)
+--	setProperty("camFollow.x", getProperty("camFollowPos.x"))
+--	setProperty("camFollow.y", getProperty("camFollowPos.y"))
+--end
