@@ -51,6 +51,7 @@ function onCreatePost()
     makeGraphic("startBlocker",1920,1080,"000000")
     setObjectCamera("startBlocker","camOther")
     addLuaSprite("startBlocker",true)
+    setProperty("camGame.zoom",1.3)
     setProperty("gf.alpha",0)
     --setProperty("boyfriend.alpha",0)
     makeAnimatedLuaSprite("ghostgf","characters/Beta_Luigi_GF_Assets",500,100)
@@ -72,6 +73,7 @@ end
 
 function onSongStart()
     doTweenAlpha("blockerOut","startBlocker",0,5,"linear")
+    doTweenZoom("zoomOut","camGame",0.8,5,"quadout")
 end
 
 ---

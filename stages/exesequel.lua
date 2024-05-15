@@ -1,13 +1,31 @@
 ---@funkinScript
 ---@module "header"
 
+function makeSprite(tag,image,posx,posy,scrollx,scrolly,front)
+    scrollx = scrollx or 1
+    scrolly = scrolly or 1
+    front = front or false
+
+    makeLuaSprite(tag,image,posx,posy)
+    setScrollFactor(tag,scrollx,scrolly)
+    addLuaSprite(tag,front)
+end
+
 function onCreate()
-    makeLuaSprite("bg3", "mario/EXE1/starman/SS_sky", -750, -600)
+    --[[makeLuaSprite("bg3", "mario/EXE1/starman/SS_sky", -750, -600)
     setScrollFactor("bg3", 0.1, 0.1)
-    addLuaSprite("bg3", false)
+    addLuaSprite("bg3", false)]]
+    makeSprite("bg3","mario/EXE1/starman/SS_sky", -750, -600,0.1,0.1)
     makeLuaSprite("bg4", "mario/EXE1/starman/SS_castle", -1100, -600)
     setScrollFactor("bg4", 0.5, 0.5)
     addLuaSprite("bg4", false)
+
+    --makeAnimatedLuaSprite("bgfire1","mario/EXE1/starman/Starman_BG_Fire_Assets",-500,-500)
+    --addLuaSprite("bgfire1",false)
+    --setObjectOrder("bgfire1",1)
+    --setScrollFactor("bgfire1",0.6,0.6)
+    --addAnimationByPrefix("bgfire1","haha-firefunny","fire anim effects",24,true)
+
     makeLuaSprite("bg5", "mario/EXE1/starman/SS_farplatforms", -1100, -600)
     setScrollFactor("bg5", 0.7, 0.7)
     addLuaSprite("bg5", false)
@@ -22,7 +40,7 @@ function onCreate()
     --addBehindDad("bg1")
     makeAnimatedLuaSprite("ssgf", "characters/SS_GF_scared_Assets", 1800, 400)
     addLuaSprite("ssgf", false)
-    addAnimationByPrefix("ssgf", "bop", "GF Dancing Beat", 24, true)
+    addAnimationByPrefix("ssgf", "bop", "GF Dancing Beat", bpm/4, true)
 
     makeAnimatedLuaSprite("peachFRICKINGdies", "characters/Peach_EXE_Cuts_New", -450, -200)
     addLuaSprite("peachFRICKINGdies")
@@ -126,6 +144,6 @@ function onUpdate(elapsed)
     if getProperty("peachFRICKINGdies.animation.curAnim.name") == "dies" and getProperty("peachFRICKINGdies.animation.curAnim.finished") == true then
         setProperty("peachFRICKINGdies.visible", false)
     end
-    setProperty("gf.animation.curAnim.framerate", 12)
+    --setProperty("gf.animation.curAnim.framerate", 12)
     --debugPrint(getObjectOrder("bf"))
 end
